@@ -1,0 +1,11 @@
+.btn-group {
+	display: grid;
+	grid-template-columns: repeat(3, 120px);
+	grid-template-rows: repeat(3, 120px);
+	grid-column-gap: 7px;
+	grid-row-gap: 7px;
+}
+.btn{
+	font-size: 40px;
+	padding: 10px;
+}
