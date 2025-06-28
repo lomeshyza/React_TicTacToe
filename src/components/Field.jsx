@@ -18,7 +18,7 @@ export default function Field() {
 		const newField = [...field];
 		store.dispatch({ type: SET_FIELD, payload: newField });
 
-		if (newField.includes("") && !isGameEnded) {
+		if (newField.includes("") && !isGameEnded && newField[evt.target.id]==='') {
 			newField[evt.target.id] = currentPlayer;
 
 			store.dispatch({
