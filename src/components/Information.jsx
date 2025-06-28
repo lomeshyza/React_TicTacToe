@@ -1,22 +1,31 @@
-import PropTypes from 'prop-types'
-import InformationLayout from './InformationLayout'
+import PropTypes from "prop-types";
+import { useState, useEffect } from "react";
+import InformationLayout from "./InformationLayout";
+import { store } from "./redux/store";
 
-export default function Information ({props}) {
-let status = ''
-	if (props.isDraw === true) {
-		status = 'Ничья'
-	} else if (props.isDraw === false && props.isGameEnded === true) {
-		status = `Победа: ${props.currentPlayer}`
-	} else if (props.isDraw === false && props.isGameEnded === false) {
-		status = `Ходит: ${props.currentPlayer}`
+export default function Information() {
+	const [storeRender, setStoreRender] = useState(store.getState());
+	const { isDraw, isGameEnded, currentPlayer } = storeRender;
+
+	useEffect(() => {
+		setStoreRender(store.getState());
+		store.subscribe(() => setStoreRender(store.getState()));
+	}, []);
+
+	let status = "";
+	if (isDraw === true) {
+		status = "Ничья";
+	} else if (isDraw === false && isGameEnded === true) {
+		status = `Победа: ${currentPlayer}`;
+	} else if (isDraw === false && isGameEnded === false) {
+		status = `Ходит: ${currentPlayer}`;
 	}
-	return (
-		<InformationLayout status={ status} />
-	)
+
+	return <InformationLayout status={status} />;
 }
 
 Information.propTypes = {
-	['props.isDraw']: PropTypes.bool,
-	['props.isGameEnded']: PropTypes.bool,
-	['props.currentPlayer']: PropTypes.string,
+	["isDraw"]: PropTypes.bool,
+	["isGameEnded"]: PropTypes.bool,
+	["currentPlayer"]: PropTypes.string,
 };

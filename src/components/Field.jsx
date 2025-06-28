@@ -1,47 +1,61 @@
-import PropTypes from 'prop-types'
-//import { useState } from "react"
-import FieldLayout from './FieldLayout'
+import PropTypes from "prop-types";
+import { useState, useEffect } from "react";
+import FieldLayout from "./FieldLayout";
+import { store } from "./redux/store";
+import {WIN_PATTERNS,SET_CURRENT_PLAYER,SET_FIELD,SET_IS_DRAW,SET_IS_GAME_ENDED } from '../constants'
 
-export default function Field({props}) {
-const WIN_PATTERNS = [
-  [0, 1, 2], [3, 4, 5], [6, 7, 8], // Варианты побед по горизонтали
-  [0, 3, 6], [1, 4, 7], [2, 5, 8], // Варианты побед по вертикали
-  [0, 4, 8], [2, 4, 6] // Варианты побед по диагонали
-];
+export default function Field() {
+	const [storeRender, setStoreRender] = useState(store.getState());
+	const { field, isGameEnded, currentPlayer } = storeRender;
+
+	useEffect(() => {
+		setStoreRender(store.getState());
+		store.subscribe(() => setStoreRender(store.getState()));
+	}, []);
+
 
 	function click(evt) {
+		const newField = [...field];
+		store.dispatch({ type: SET_FIELD, payload: newField });
 
-		if (props.field.includes('') && !props.isGameEnded) {
-			props.field[evt.target.id] = props.currentPlayer
-			props.setCurrentPlayer(props.currentPlayer === 'X' ? '0' : 'X')
+		if (newField.includes("") && !isGameEnded) {
+			newField[evt.target.id] = currentPlayer;
+
+			store.dispatch({
+				type: SET_CURRENT_PLAYER,
+				payload: currentPlayer === "X" ? "0" : "X",
+			});
 		}
-		if (!props.field.includes('') && !props.isGameEnded) {
-			props.setIsDraw(true)
+		if (!newField.includes("") && !isGameEnded) {
+			store.dispatch({ type: SET_IS_DRAW, payload: true });
 		}
 		for (let pattern of WIN_PATTERNS) {
-			if ((props.field[pattern[0]] === 'X' && props.field[pattern[1]] === 'X' && props.field[pattern[2]] === 'X')) {
-				props.setCurrentPlayer('X')
-				props.setIsGameEnded(true)
-			}else if ((
-				props.field[pattern[0]] === '0' && props.field[pattern[1]] === '0' && props.field[pattern[2]]=== '0'
-			)) {
-				props.setCurrentPlayer('0')
-				props.setIsGameEnded(true)
+			if (
+				newField[pattern[0]] === "X" &&
+				newField[pattern[1]] === "X" &&
+				newField[pattern[2]] === "X"
+			) {
+				store.dispatch({ type: SET_CURRENT_PLAYER, payload: "X" });
+				store.dispatch({ type: SET_IS_GAME_ENDED, payload: true });
+			} else if (
+				newField[pattern[0]] === "0" &&
+				newField[pattern[1]] === "0" &&
+				newField[pattern[2]] === "0"
+			) {
+				store.dispatch({ type: SET_CURRENT_PLAYER, payload: "0" });
+				store.dispatch({ type: SET_IS_GAME_ENDED, payload: true });
 			}
 		}
+
+		setStoreRender(store.getState());
 	}
 
-	return (
-		<FieldLayout field={props.field} onClick={click} />
-	)
+	return <FieldLayout onClick={click} />;
 }
 
 Field.propTypes = {
-	['props.isDraw']: PropTypes.bool,
-	['props.isGameEnded']: PropTypes.bool,
-	['props.currentPlayer']: PropTypes.string,
-	['props.field']: PropTypes.array,
-	['props.setCurrentPlayer']: PropTypes.func,
-	['props.setIsGameEnded']: PropTypes.func,
-	['props.setIsDraw']: PropTypes.func,
+	["isDraw"]: PropTypes.bool,
+	["isGameEnded"]: PropTypes.bool,
+	["currentPlayer"]: PropTypes.string,
+	["field"]: PropTypes.array,
 };
