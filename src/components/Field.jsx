@@ -9,7 +9,6 @@ export default function Field() {
 	const { field, isGameEnded, currentPlayer } = storeRender;
 
 	useEffect(() => {
-		setStoreRender(store.getState());
 		store.subscribe(() => setStoreRender(store.getState()));
 	}, []);
 
@@ -26,6 +25,7 @@ export default function Field() {
 				payload: currentPlayer === "X" ? "0" : "X",
 			});
 		}
+
 		if (!newField.includes("") && !isGameEnded) {
 			store.dispatch({ type: SET_IS_DRAW, payload: true });
 		}
@@ -47,7 +47,6 @@ export default function Field() {
 			}
 		}
 
-		setStoreRender(store.getState());
 	}
 
 	return <FieldLayout onClick={click} />;

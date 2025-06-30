@@ -3,7 +3,6 @@ import styles from "./field.module.css";
 import { store } from "./redux/store";
 export default function FieldLayout({ onClick }) {
 	const field = store.getState().field;
-	store.subscribe(() => store.getState());
 
 	return (
 		<div className={styles["btn-group"]}>

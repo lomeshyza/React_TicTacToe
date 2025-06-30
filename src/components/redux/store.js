@@ -1,4 +1,4 @@
-import { appReducer} from "./reducer"
+/* import { appReducer} from "./reducer"
 
 export const createStore = (reducer) => {
 
@@ -14,4 +14,8 @@ export const createStore = (reducer) => {
 	}
 }
 export const store = createStore(appReducer)
-store.dispatch({})
+store.dispatch({}) */
+import { createStore } from 'redux'
+import {appReducer} from './reducer'
+export const store = createStore(appReducer)
+
