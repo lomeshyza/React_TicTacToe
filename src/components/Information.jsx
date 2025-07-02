@@ -1,15 +1,13 @@
 import PropTypes from "prop-types";
-import { useState, useEffect } from "react";
 import InformationLayout from "./InformationLayout";
-import { store } from "./redux/store";
+import { useSelector } from "react-redux";
+import {selectIsDraw, selectCurrentPlayer, selectIsGameEnded } from '../selectors'
 
 export default function Information() {
-	const [storeRender, setStoreRender] = useState(store.getState());
-	const { isDraw, isGameEnded, currentPlayer } = storeRender;
 
-	useEffect(() => {
-		store.subscribe(() => setStoreRender(store.getState()));
-	}, []);
+	const isDraw = useSelector(selectIsDraw) //({selectIsDraw})=>selectIsDraw
+	const isGameEnded = useSelector(selectIsGameEnded)
+	const currentPlayer = useSelector(selectCurrentPlayer)
 
 	let status = "";
 	if (isDraw === true ) {
